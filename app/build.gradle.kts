@@ -12,6 +12,7 @@ android {
         minSdk = 26
         targetSdk = 33
         versionCode = 1
+        multiDexEnabled = true
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -71,6 +72,8 @@ dependencies {
     implementation ("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation ("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation ("com.polidea.rxandroidble3:rxandroidble:1.18.1")
+    implementation ("com.android.support:multidex:1.0.0")
+    implementation ("io.reactivex.rxjava3:rxjava:3.1.8")
 //    implementation ("com.github.polidea.rxandroidble2:rxandroidble:1.11.0")
 //    implementation ("com.polidea.rxandroidble2:rxandroidble:1.11.0")
 }
