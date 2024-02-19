@@ -70,6 +70,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation ("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation ("io.reactivex.rxjava2:rxandroid:2.1.1")
+    implementation ("com.polidea.rxandroidble3:rxandroidble:1.18.1")
 //    implementation ("com.github.polidea.rxandroidble2:rxandroidble:1.11.0")
 //    implementation ("com.polidea.rxandroidble2:rxandroidble:1.11.0")
 }
