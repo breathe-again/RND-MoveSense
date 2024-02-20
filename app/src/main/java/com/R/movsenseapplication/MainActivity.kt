@@ -78,9 +78,9 @@ class MainActivity : ComponentActivity() {
         buttonScanStop.setOnClickListener {
            findViewById<View>(R.id.buttonScan).visibility = View.VISIBLE
             findViewById<View>(R.id.buttonScanStop).visibility = View.GONE
-            //onScanStopClicked()
+            onScanStopClicked()
 
-           testConnect()
+//           testConnect()
         }
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -145,19 +145,9 @@ class MainActivity : ComponentActivity() {
 
 
     fun onScanClicked() {
-        // Start with empty list
-//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
-//        //requesting permission only for Android 12 and above
-//        AndroidManifest.permission.BLUETOOTH_SCAN
-//        Manifest.permission.BLUETOOTH_CONNECT,
-//        Manifest.permission.BLUETOOTH_ADVERTISE,
-//    }
-//    await Permission.bluetoothConnect.request().isGrant
         mScanResArrayList.clear()
         mScanResArrayAdapter.notifyDataSetChanged()
         rxBleClient = RxBleClient.create(this)
-
-
         mScanSubscription = rxBleClient.scanBleDevices(
             ScanSettings.Builder()
 //             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY) // change if needed
@@ -166,7 +156,6 @@ class MainActivity : ComponentActivity() {
         )
             .subscribe(
                 { scanResult ->
-
                     Log.d(
                         "LOG_TAG",
                         "mac: ${scanResult.bleDevice.macAddress}" + "name: ${scanResult.bleDevice.name}"
@@ -189,50 +178,11 @@ class MainActivity : ComponentActivity() {
                             onScanStopClicked()
                         }
                     }
-
-
-                    //Log.d("LOG_TAG", "scanResult: $scanResult")
-//                scanResult.bleDevice?.let { bleDevice ->
-//                    if (bleDevice.name != null && bleDevice.name!!.startsWith("Movesense")) {
-//                        val msr = MyScanResult(scanResult)
-//                        if (mScanResArrayList.contains(msr))
-//                            mScanResArrayList[mScanResArrayList.indexOf(msr)] = msr
-//                        else
-//                            mScanResArrayList.add(0, msr)
-//                        runOnUiThread { mScanResArrayAdapter.notifyDataSetChanged() }
-//                    }
-//                }
                 }, { throwable ->
                     Log.e("LOG_TAG", "scan error: $throwable")
                     onScanStopClicked()
                 })
 
-
-        /* mScanSubscription = rxBleClient.observeStateChanges()
-             .switchMap<Any> { state: RxBleClient.State? ->
-                 when (state) {
-                     RxBleClient.State.READY ->                 // everything should work
-                         return@switchMap rxBleClient.scanBleDevices()
-
-                     RxBleClient.State.BLUETOOTH_NOT_AVAILABLE, RxBleClient.State.LOCATION_PERMISSION_NOT_GRANTED, RxBleClient.State.BLUETOOTH_NOT_ENABLED, RxBleClient.State.LOCATION_SERVICES_NOT_ENABLED -> return@switchMap Observable.empty()
-                     else -> return@switchMap Observable.empty()
-                 }
-             }
-             .subscribe(
-                 { rxBleScanResult: Any? ->
-                         if (bleDevice.name != null && bleDevice.name.startsWith("Movesense")) {
-                             val msr = MyScanResult(scanResult)
-                             if (mScanResArrayList.contains(msr))
-                                 mScanResArrayList[mScanResArrayList.indexOf(msr)] = msr
-                             else
-                                 mScanResArrayList.add(0, msr)
-                             runOnUiThread { mScanResArrayAdapter.notifyDataSetChanged() }
-                         }
-                 }
-             ) { throwable: Throwable? ->
-                 Log.e("LOG_TAG", "scan error: $throwable")
-                 onScanStopClicked(view)
-             }*/
     }
 
     fun onScanStopClicked() {
@@ -245,7 +195,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-//    onScanClicked(view)
+
     }
 
     private fun testConnect() {
@@ -263,116 +213,7 @@ class MainActivity : ComponentActivity() {
                     Log.v("TAG", "BLE completed")
                 }
             )
-
-
-
-
-
-
-
-
-
-
-
-//
-////        val bleDevice: RxBleDevice = rxBleClient.getBleDevice("0C:8C:DC:41:E2:2B")
-////        val device = rxBleClient.getBleDevice("0C:8C:DC:41:E2:2B")
-//        mScanSubscription = rxBleClient.getBleDevice("0C:8C:DC:41:E2:2B")
-//            .establishConnection(false)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(Schedulers.io())
-//            .subscribe(
-//                { conn -> Log.v("TAG", "BLE connected") },
-//                { throwable -> Log.e("TAG", "BLE connection failed", throwable) },
-//                { Log.v("TAG", "BLE completed") }
-//            )
-//        Observable.timer(250, TimeUnit.MILLISECONDS)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(Schedulers.io())
-//            .subscribe {
-//                Log.v("TAG", "BLE cancelling connection")
-//                mScanSubscription.dispose()
-//            }
-//
-//        /*mScanSubscription = device.establishConnection(false) // <-- autoConnect flag
-//            .subscribe(
-//                { rxBleConnection: RxBleConnection? ->
-//                    mMds!!.connect("0C:8C:DC:41:E2:2B", object : MdsConnectionListener {
-//                        override fun onConnect(s: String) {
-//                            Log.d("LOG_TAG", "onConnect: $s")
-//                        }
-//
-//                        override fun onConnectionComplete(
-//                            macAddress: String,
-//                            serial: String
-//                        ) {
-//                            for (sr in mScanResArrayList) {
-//                                if (sr.macAddress.equals(macAddress)) {
-//                                    sr.markConnected(serial)
-//                                    break
-//                                }
-//                            }
-//                            runOnUiThread {
-//                                mScanResArrayAdapter.notifyDataSetChanged()
-//                            }
-//                        }
-//
-//                        override fun onError(e: MdsException) {
-//                            Log.e("LOG_TAG", "onError: $e")
-//                            showConnectionError(e)
-//                        }
-//
-//                        override fun onDisconnect(bleAddress: String) {
-//                            Log.d("LOG_TAG", "onDisconnect: $bleAddress")
-//                            for (sr in mScanResArrayList) {
-//                                if (bleAddress == sr.macAddress.toString())
-//                                    sr.markDisconnected()
-//                            }
-//                            runOnUiThread {
-//                                mScanResArrayAdapter.notifyDataSetChanged()
-//                            }
-//                        }
-//                    })
-//                }
-//            ) { throwable: Throwable? ->
-////                mMds!!.disconnect(bleDevice)
-//            }
-//
-////        mMds!!.connect("0C:8C:DC:41:E2:2B", object : MdsConnectionListener {
-////            override fun onConnect(s: String) {
-////                Log.d("LOG_TAG", "onConnect: $s")
-////            }
-////
-////            override fun onConnectionComplete(macAddress: String, serial: String) {
-////                for (sr in mScanResArrayList) {
-////                    if (sr.macAddress.equals(macAddress)) {
-////                        sr.markConnected(serial)
-////                        break
-////                    }
-////                }
-////                runOnUiThread {
-////                    mScanResArrayAdapter.notifyDataSetChanged()
-////                }
-////            }
-////
-////            override fun onError(e: MdsException) {
-////                Log.e("LOG_TAG", "onError: $e")
-////                showConnectionError(e)
-////            }
-////
-////            override fun onDisconnect(bleAddress: String) {
-////                Log.d("LOG_TAG", "onDisconnect: $bleAddress")
-////                for (sr in mScanResArrayList) {
-////                    if (bleAddress == sr.macAddress.toString())
-////                        sr.markDisconnected()
-////                }
-////                runOnUiThread {
-////                    mScanResArrayAdapter.notifyDataSetChanged()
-////                }
-////            }
-////        })*/
     }
-
 
     private fun onItemLongClick(
         parent: AdapterView<*>,
@@ -398,79 +239,35 @@ class MainActivity : ComponentActivity() {
                         { throwable -> Log.e("TAG", "BLE connection failed", throwable) },
                         {
                             Log.v("TAG", "BLE completed")
-
-                            for (sr in mScanResArrayList) {
-                                if (sr.macAddress.equals(bleDevice)) {
-//                                    sr.markConnected(serial)
-                                    break
-                                }
-                            }
-                            runOnUiThread {
-                                mScanResArrayAdapter.notifyDataSetChanged()
-                            }
                         }
                     )
 
-                Log.v("TAG", "BLE connected")
+            } else {
+                Log.i("LOG_TAG", "Disconnecting from BLE device: ${device.macAddress}")
+                mMds!!.disconnect(bleDevice)
+            }
+            true
+        }
+        return true
+    }
 
 
-
-               /* Observable.timer(250, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
-                    .subscribe {
-                        Log.v("TAG", "BLE cancelling connection")
-                        mScanSubscription.dispose()
-                    }*/
-              /*  mScanSubscription = device.establishConnection(false) // <-- autoConnect flag
-                    .subscribe(
-                        { rxBleConnection: RxBleConnection? ->
-                            mMds!!.connect(bleDevice, object : MdsConnectionListener {
-                                override fun onConnect(s: String) {
-                                    Log.d("LOG_TAG", "onConnect: $s")
-                                }
-
-                                override fun onConnectionComplete(
-                                    macAddress: String,
-                                    serial: String
-                                ) {
-                                    for (sr in mScanResArrayList) {
-                                        if (sr.macAddress.equals(macAddress)) {
-                                            sr.markConnected(serial)
-                                            break
-                                        }
-                                    }
-                                    runOnUiThread {
-                                        mScanResArrayAdapter.notifyDataSetChanged()
-                                    }
-                                }
-
-                                override fun onError(e: MdsException) {
-                                    Log.e("LOG_TAG", "onError: $e")
-                                    showConnectionError(e)
-                                }
-
-                                override fun onDisconnect(bleAddress: String) {
-                                    Log.d("LOG_TAG", "onDisconnect: $bleAddress")
-                                    for (sr in mScanResArrayList) {
-                                        if (bleAddress == sr.macAddress.toString())
-                                            sr.markDisconnected()
-                                    }
-                                    runOnUiThread {
-                                        mScanResArrayAdapter.notifyDataSetChanged()
-                                    }
-                                }
-                            })
-                        }
-                    ) { throwable: Throwable? ->
-                        mMds!!.disconnect(bleDevice)
-                    }*/
-
-                //val bleDevice =  rxBleClient.getBleDevice(device.macAddress.bleDevice)
-                /*  val bleDevice =  device.macAddress.bleDevice
-                  Log.i("LOG_TAG", "Connecting to BLE device: ${bleDevice.macAddress}")
+    private fun onItemLongClick1(
+        parent: AdapterView<*>,
+        view: View,
+        position: Int,
+        id: Long
+    ): Boolean {
+        mScanResultListView.setOnItemLongClickListener { parent, view, position, id ->
+            if (position < 0 || position >= mScanResArrayList.size)
+                return@setOnItemLongClickListener false
+            val device = mScanResArrayList[position]
+            val bleDevice = device.macAddress.bleDevice.macAddress
+            if (!device.isConnected) {
+                val device = rxBleClient.getBleDevice(bleDevice)
+                  Log.i("LOG_TAG", "Connecting to BLE device: ${device}")
                   try {
-                      mMds!!.connect(bleDevice.macAddress, object : MdsConnectionListener {
+                      mMds!!.connect(bleDevice, object : MdsConnectionListener {
                           override fun onConnect(s: String) {
                               Log.d("LOG_TAG", "onConnect: $s")
                           }
@@ -505,7 +302,7 @@ class MainActivity : ComponentActivity() {
                       })
                   }catch (ex:Exception){
                       Log.d("LOG_TAG", "onConnect--1: $ex")
-                  }*/
+                  }
 
             } else {
                 Log.i("LOG_TAG", "Disconnecting from BLE device: ${device.macAddress}")
