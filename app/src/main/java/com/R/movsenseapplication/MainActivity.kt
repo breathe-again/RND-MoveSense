@@ -3,6 +3,8 @@ package com.R.movsenseapplication
 import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -215,6 +217,7 @@ class MainActivity : ComponentActivity() {
             )
     }
 
+    /*Own implementation using  RxAndroidBle-library for easy scanning of BLE devices file*/
     private fun onItemLongClick(
         parent: AdapterView<*>,
         view: View,
@@ -235,10 +238,28 @@ class MainActivity : ComponentActivity() {
                     .subscribe(
                         { conn ->
                             Log.v("TAG", "BLE connected")
+                            Handler(Looper.getMainLooper()).post {
+                                MyToast.showLongToast(this, "BLE connected!")
+                            }
                         },
-                        { throwable -> Log.e("TAG", "BLE connection failed", throwable) },
+                        { throwable ->
+                            Log.e("TAG", "BLE connection failed", throwable)
+                            Handler(Looper.getMainLooper()).post {
+                                MyToast.showLongToast(this, "BLE connection failed!,Already connected")
+                                mMds!!.disconnect(bleDevice)
+                                MyToast.showLongToast(this, "Disconnecting from BLE device")
+                                mScanResArrayList.clear()
+                                mScanResArrayAdapter.notifyDataSetChanged()
+                                buttonScan.visibility = View.VISIBLE
+                                mScanSubscription.dispose()
+                                buttonScanStop.visibility = View.GONE
+                            }
+                        },
                         {
                             Log.v("TAG", "BLE completed")
+                            Handler(Looper.getMainLooper()).post {
+                                MyToast.showLongToast(this, "BLE completed")
+                            }
                         }
                     )
 
@@ -252,6 +273,7 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    /*Doucument wise implementation*/
     private fun onItemLongClick1(
         parent: AdapterView<*>,
         view: View,
