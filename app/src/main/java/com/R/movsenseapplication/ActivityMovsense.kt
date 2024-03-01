@@ -24,8 +24,8 @@ class ActivityMovsense : AppCompatActivity() {
     private lateinit var mMds: Mds
 //    private lateinit var mScanSubscription: Disposable
     private lateinit var mScanResultListView: ListView
-    private val mScanResArrayList: ArrayList<MyScanResult> = ArrayList()
-    private lateinit var mScanResArrayAdapter: ArrayAdapter<MyScanResult>
+//    private val mScanResArrayList: ArrayList<MyScanResult> = ArrayList()
+//    private lateinit var mScanResArrayAdapter: ArrayAdapter<MyScanResult>
 //    private lateinit var bleClient: RxBleClient
     private val LOG_TAG = "ActivityMovsense"
     val SCHEME_PREFIX = ""

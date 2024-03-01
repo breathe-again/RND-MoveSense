@@ -69,11 +69,19 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation ("io.reactivex.rxjava2:rxjava:2.2.21")
+//    implementation ("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation ("io.reactivex.rxjava2:rxandroid:2.1.1")
-    implementation ("com.polidea.rxandroidble3:rxandroidble:1.18.1")
+//    implementation ("com.polidea.rxandroidble3:rxandroidble:1.18.1")
     implementation ("com.android.support:multidex:1.0.0")
-    implementation ("io.reactivex.rxjava3:rxjava:3.1.8")
+//    implementation ("io.reactivex.rxjava3:rxjava:3.1.8")
+    implementation ("com.google.code.gson:gson:2.8.0")
+
+    implementation ("com.polidea.rxandroidble2:rxandroidble:1.10.2")
+    implementation ("io.reactivex.rxjava2:rxjava:2.2.8")
+    implementation ("com.android.support.constraint:constraint-layout:1.0.2")
+    testImplementation ("'junit:junit:4.12")
 //    implementation ("com.github.polidea.rxandroidble2:rxandroidble:1.11.0")
 //    implementation ("com.polidea.rxandroidble2:rxandroidble:1.11.0")
+
+
 }
